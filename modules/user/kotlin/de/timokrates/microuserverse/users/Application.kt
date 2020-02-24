@@ -3,8 +3,6 @@ package de.timokrates.microuserverse.users
 import io.ktor.application.Application
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.ContentNegotiation
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
@@ -20,7 +18,7 @@ suspend fun <T> ApplicationCall.respondSerializedJson(serializer: KSerializer<T>
 
 
 fun Application.main() {
-    val repository = ListUserRepository()
+    val repository = MapUserRepository()
 
     routing {
         get("/health") { call.respond(HttpStatusCode.OK) }
