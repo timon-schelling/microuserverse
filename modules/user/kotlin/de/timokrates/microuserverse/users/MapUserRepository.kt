@@ -20,13 +20,13 @@ class MapUserRepository(
         return groupId
     }
 
-    override fun findGroup(id: UserId): GroupId? {
+    override fun findGroup(id: UserId, groupId: GroupId): GroupId? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun removeGroup(id: UserId): GroupId? {
+    override fun removeGroup(id: UserId, groupId: GroupId): GroupId? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun iterator() = users.iterator()
+    override fun iterator() = users.map { it.key }.iterator()
 }
