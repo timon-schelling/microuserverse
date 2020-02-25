@@ -44,17 +44,28 @@ fun Application.main() {
                 }
                 route("/groups") {
                     get {
-
+                        val id = call.parameters["user"] ?: return@get
+                        val groups = repository.groups(UserId(id))?.map { it } ?: return@get
+                        call.respondSerializedJson(ArrayListSerializer(Group.serializer()), groups)
                     }
                     route("/{group}") {
                         get {
-
+                            val id = call.parameters["user"] ?: return@get
+                            val groupId = call.parameters["group"] ?: return@get
+                            val group = repository.findGroup(UserId(id), GroupId(groupId)) ?: return@get
+                            call.respondSerializedJson(Group.serializer(), group)
                         }
                         post {
-
+                            val id = call.parameters["user"] ?: return@post
+                            val groupId = call.parameters["group"] ?: return@post
+                            val group = repository.addGroup(UserId(id), GroupId(groupId)) ?: return@post
+                            call.respondSerializedJson(Group.serializer(), group)
                         }
                         delete {
-
+                            val id = call.parameters["user"] ?: return@delete
+                            val groupId = call.parameters["group"] ?: return@delete
+                            val group = repository.removeGroup(UserId(id), GroupId(groupId)) ?: return@delete
+                            call.respondSerializedJson(Group.serializer(), group)
                         }
                     }
                 }

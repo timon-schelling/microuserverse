@@ -1,4 +1,4 @@
-package de.timokrates.microuserverse.groups
+package de.timokrates.microuserverse.users
 
 import kotlinx.serialization.Serializable
 
