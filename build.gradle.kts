@@ -80,6 +80,19 @@ subprojects {
             dependsOn(it.tasks.findByPath("test") ?: return@forEach)
         }
     }
+
+    dependencies {
+        testCompile("io.kotlintest:kotlintest-runner-junit5:3.3.2")
+        testCompile("io.ktor:ktor-server-test-host:${Versions.ktor}")
+    }
+
+    test.apply {
+        useJUnitPlatform()
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
+    }
+
 }
 
 val install = task("install") {
