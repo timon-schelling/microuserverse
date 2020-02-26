@@ -56,6 +56,12 @@ allprojects {
     dependencies {
         compile(Deps.kotlinStdlib)
         compile(Deps.kotlinStdlibJdk8)
+        compile(Deps.ktorClient)
+        compile(Deps.ktorClientJetty)
+        compile(Deps.ktorServer)
+        compile(Deps.ktorServerNetty)
+        compile(Deps.kotlinSerializationRuntime)
+
         subprojects.forEach {
             project(it.path)
             add("compile", project(it.path))
@@ -93,6 +99,22 @@ subprojects {
         }
     }
 
+    val distributeServices = task("distributeServices", Copy::class) {
+        group = "distribute"
+        shouldRunAfter("build")
+
+        includeEmptyDirs = true
+
+        from("${project.buildDir.absolutePath}/libs")
+        from(project.configurations.archives.map {
+            it.asFileTree
+        })
+        from(project.configurations.compile.map {
+            it.asFileTree
+        })
+        into("${buildDir}/dist/services/${project.name}/lib")
+    }
+
 }
 
 val install = task("install") {
@@ -115,6 +137,7 @@ val copyDistIntoRun = task("copyDistIntoRun", Sync::class) {
 val distribute = task("distribute") {
     group = "distribute"
     dependsOn("build")
+    dependsOn("distributeServices")
     dependsOn("copyAllProjectJarsIntoLibs")
     dependsOn("copyLibsIntoDist")
     dependsOn("copyStaticIntoDist")
@@ -140,6 +163,15 @@ test.apply {
     subprojects.forEach {
         dependsOn(it.tasks.findByPath("test") ?: return@forEach)
     }
+}
+
+val distributeServices = task("distributeServices", Copy::class) {
+    group = "distribute"
+    shouldRunAfter("build")
+    subprojects.forEach {
+        dependsOn(it.tasks.findByPath("distributeServices") ?: return@forEach)
+    }
+    includeEmptyDirs = true
 }
 
 val copyAllProjectJarsIntoLibs = task("copyAllProjectJarsIntoLibs", Copy::class) {
@@ -181,6 +213,8 @@ val copyStaticIntoDist = task("copyStaticIntoDist", Copy::class) {
 
 val copySubProjectDist = task("copySubProjectDist", Copy::class) {
     group = "distribute"
+
+    shouldRunAfter("distributeServices")
 
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     subprojects.forEach {

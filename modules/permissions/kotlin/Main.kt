@@ -1,3 +1,5 @@
+@file:JvmName("Main")
+
 import de.timokrates.microuserverse.permissions.main
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty

@@ -1,0 +1,14 @@
+version: '3'
+services:
+  permissions:
+    build: ./services/permissions
+    ports:
+      - "21001:21001"
+  groups:
+    build: ./services/groups
+    ports:
+      - "21002:21002"
+  users:
+    build: ./services/users
+    ports:
+      - "21003:21003"

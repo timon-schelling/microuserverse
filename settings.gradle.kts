@@ -2,7 +2,7 @@ import util.includeFromModuleDir
 
 rootProject.name = "microuserverse"
 
-includeFromModuleDir(":user")
+includeFromModuleDir(":users")
 includeFromModuleDir(":groups")
 includeFromModuleDir(":permissions")
 
